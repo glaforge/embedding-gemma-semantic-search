@@ -26,7 +26,20 @@ This visualization only shows the first 128 values of each embedding vector. Thi
 
 The embedding model files are not included in this repository due to their size. You have two options to run this application: using a local model or a remote model from the Hugging Face Hub.
 
-### Option 1: Using a local model (default)
+The application is configured to fetch the model from the Hugging Face Hub by default. In `services/embeddingService.ts`, you should see the following configuration:
+
+```typescript
+env.allowLocalModels = false;
+env.allowRemoteModels = true;
+
+const MODEL_ID = "onnx-community/embeddinggemma-300m-ONNX";
+```
+
+This instructs Transformers.js to download the model from the specified Hugging Face repository and cache it in the browser's IndexedDB.
+
+### Optional: Using a local model
+
+If you prefer to run the application with a local model (e.g., for offline use):
 
 1.  **Download the model files:**
     Download the model files from the Hugging Face repository: [onnx-community/embeddinggemma-300m-ONNX](https://huggingface.co/onnx-community/embeddinggemma-300m-ONNX/tree/main). You will need to download all the files from the repository.
@@ -35,33 +48,13 @@ The embedding model files are not included in this repository due to their size.
     Create a `public/model` directory in the root of this project and place all the downloaded model files inside it.
 
 3.  **Configuration:**
-    The application is configured to use a local model by default. In `services/embeddingService.ts`, you should see the following configuration:
+    Open `services/embeddingService.ts` and modify the configuration as follows:
 
     ```typescript
     env.allowLocalModels = true;
     env.allowRemoteModels = false;
-
     const MODEL_ID = "/model/";
     ```
-
-### Option 2: Using a remote model
-
-If you prefer not to download the model files locally, you can configure the application to fetch the model from the HuggingFace Hub at runtime.
-
-1.  **Configuration:**
-    Open `services/embeddingService.ts` and modify the configuration as follows:
-
-    ```typescript
-    // env.allowLocalModels = true; // Before
-    // env.allowRemoteModels = false; // Before
-    // const MODEL_ID = "/model/"; // Before
-
-    env.allowLocalModels = false; // After
-    env.allowRemoteModels = true; // After
-    const MODEL_ID = "onnx-community/embeddinggemma-300m-ONNX"; // After
-    ```
-
-    This will instruct Transformers.js to download the model from the specified Hugging Face repository.
 
 ## License
 
